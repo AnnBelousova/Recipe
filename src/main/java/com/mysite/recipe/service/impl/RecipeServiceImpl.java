@@ -9,8 +9,7 @@ import java.util.Map;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
-    private long id = 0;
-    private long ingId = 0;
+    private static long recId = 0;
     private Map<Long, Recipe> recipes = new HashMap<>();
 
     Recipe recipe;
@@ -38,8 +37,8 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public long addRecipe(Recipe recipe) {
-        recipes.put(id, recipe);
-        return id++;
+        recipes.put(recId, recipe);
+        return recId++;
     }
 
     @Override
