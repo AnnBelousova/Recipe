@@ -1,12 +1,10 @@
 package com.mysite.recipe.controllers;
 
-import com.mysite.recipe.model.Ingredient;
 import com.mysite.recipe.model.Recipe;
 import com.mysite.recipe.service.IngredientService;
 import com.mysite.recipe.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
