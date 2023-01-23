@@ -2,11 +2,13 @@ package com.mysite.recipe.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode
 public class Recipe {
     private long id;
     private String recipeName;

@@ -2,6 +2,7 @@ package com.mysite.recipe.service.impl;
 
 import com.mysite.recipe.model.Ingredient;
 import com.mysite.recipe.service.IngredientService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -26,6 +27,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public String getIngredients() {
         String value = "";
+        StringUtils.upperCase(value);
         for(Map.Entry<Long, Ingredient> pair : ingredients.entrySet()){
             value += pair.getValue().getIngredientName() + ", " +
                     pair.getValue().getQuantity() + ", "
