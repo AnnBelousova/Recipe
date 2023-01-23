@@ -7,21 +7,17 @@ import com.mysite.recipe.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/recipe")
-@AllArgsConstructor
 @Tag(name = "Рецепты", description = "Контроллер для работы со списком 'Рецептов'")
 public class RecipeListController {
 
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
-
-//    public RecipeListController(RecipeService recipeService, IngredientService ingredientService) {
-//        this.recipeService = recipeService;
-//        this.ingredientService = ingredientService;
-//    }
 
     @GetMapping("/{id}")
     @Operation(

@@ -18,10 +18,6 @@ import java.util.Map;
 public class IngredientController {
     private final IngredientService ingredientService;
 
-//    public IngredientController(IngredientService ingredientService) {
-//        this.ingredientService = ingredientService;
-//    }
-
     @GetMapping("/{id}")
     @Operation(
             summary = "Получение ингридиента по ID",
