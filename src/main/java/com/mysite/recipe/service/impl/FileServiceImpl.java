@@ -4,6 +4,7 @@ import com.mysite.recipe.service.FileService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,7 @@ public class FileServiceImpl implements FileService {
     private String dataFileNameRec;
 
     @Override
-    public boolean writeIngredientsToFile(String json){
+    public boolean writeIngredientsToFile(String json) {
         Path path = Path.of(dataFilePath, dataFileNameIngr);
         try {
             deleteIngredientsDataFromFile();
@@ -31,8 +32,9 @@ public class FileServiceImpl implements FileService {
         }
 
     }
+
     @Override
-    public String readIngredientsFromFile(){
+    public String readIngredientsFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameIngr);
         try {
             return Files.readString(path);
@@ -42,7 +44,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private boolean deleteIngredientsDataFromFile(){
+    private boolean deleteIngredientsDataFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameIngr);
         try {
             Files.deleteIfExists(path);
@@ -55,7 +57,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public boolean writeRecipesToFile(String json){
+    public boolean writeRecipesToFile(String json) {
         Path path = Path.of(dataFilePath, dataFileNameRec);
         try {
             deleteRecipesDataFromFile();
@@ -67,8 +69,9 @@ public class FileServiceImpl implements FileService {
         }
 
     }
+
     @Override
-    public String readRecipesFromFile(){
+    public String readRecipesFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameRec);
         try {
             return Files.readString(path);
@@ -78,7 +81,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private boolean deleteRecipesDataFromFile(){
+    private boolean deleteRecipesDataFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameRec);
         try {
             Files.deleteIfExists(path);
@@ -89,5 +92,37 @@ public class FileServiceImpl implements FileService {
             return false;
         }
     }
+    @Override
+    public boolean isFileExistsRec() {
+        Path path = Path.of(dataFilePath ,dataFileNameRec);
+        File file = new File(path.toUri());
+        return file.exists() && !file.isDirectory();
+    }
 
+    @Override
+    public void createFileRec() {
+        Path path = Path.of(dataFilePath, dataFileNameRec);
+        try {
+            Files.createFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean isFileExistsIngr() {
+        Path path = Path.of(dataFilePath ,dataFileNameIngr);
+        File file = new File(path.toUri());
+        return file.exists() && !file.isDirectory();
+    }
+
+    @Override
+    public void createFileIngr() {
+        Path path = Path.of(dataFilePath, dataFileNameIngr);
+        try {
+            Files.createFile(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

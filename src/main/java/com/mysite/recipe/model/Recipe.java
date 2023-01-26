@@ -16,7 +16,7 @@ import java.util.*;
 @EqualsAndHashCode
 public class Recipe {
     @NotNull(message = "Это поле обязательное")
-    private String recipeName;
+    private String name;
     @Positive
     private int preparingTime;
     @NotEmpty

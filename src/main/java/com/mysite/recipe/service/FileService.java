@@ -1,5 +1,7 @@
 package com.mysite.recipe.service;
 
+import java.io.File;
+
 public interface FileService {
 
     boolean writeIngredientsToFile(String json);
@@ -9,4 +11,12 @@ public interface FileService {
     String readIngredientsFromFile();
 
     String readRecipesFromFile();
+
+    boolean isFileExistsRec();
+
+    void createFileRec();
+
+    boolean isFileExistsIngr();
+
+    void createFileIngr();
 }

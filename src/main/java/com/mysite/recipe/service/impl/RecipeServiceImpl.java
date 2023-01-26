@@ -10,6 +10,7 @@ import com.mysite.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
@@ -27,18 +28,20 @@ public class RecipeServiceImpl implements RecipeService {
 
     @PostConstruct
     private void init() {
-        readData();
+        if(fileService.isFileExistsRec() == true){
+            System.out.println(fileService.isFileExistsRec());
+            readData();
+        }else{
+            fileService.createFileRec();
+        }
     }
 
     @Override
     public Recipe getRecipeById(long id) {
-        for (Map.Entry<Long, Recipe> recipeEntry : recipes.entrySet()) {
-            if (recipeEntry.getKey() == id) {
-                recipe = recipeEntry.getValue();
-                return recipe;
-            }
+        if(!recipes.containsKey(id)){
+            throw new NotFoundException("Рецепт с таким ID не найден");
         }
-        return null;
+        return recipes.get(id);
     }
 
     public Collection<Recipe> getRecipes() {

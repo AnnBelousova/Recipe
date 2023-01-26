@@ -14,7 +14,7 @@ import javax.validation.constraints.Positive;
 @EqualsAndHashCode
 public class Ingredient {
     @NotNull(message = "Это поле обязательное")
-    private String ingredientName;
+    private String name;
     @Positive
     private int quantity;
     @NotNull

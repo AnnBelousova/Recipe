@@ -41,14 +41,15 @@ public class IngredientController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Ингридиент найден",
-                    content = {@Content (mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
-    public ResponseEntity<Ingredient> getIngredientById(@PathVariable long id){
+    public ResponseEntity<Ingredient> getIngredientById(@PathVariable long id) {
         Ingredient ingredient = ingredientService.getIngredient(id);
-        if(ingredient == null){
+        if (ingredient == null) {
             ResponseEntity.notFound().build();
-        }return ResponseEntity.ok(ingredient);
+        }
+        return ResponseEntity.ok(ingredient);
     }
 
     @GetMapping()
@@ -60,10 +61,10 @@ public class IngredientController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Ингридиент найден",
-                    content = {@Content (mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
-    public Collection<Ingredient> getIngredients(){
+    public Collection<Ingredient> getIngredients() {
         return this.ingredientService.getIngredients();
     }
 
@@ -76,10 +77,10 @@ public class IngredientController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Ингридиент найден",
-                    content = {@Content (mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
-    public ResponseEntity<Ingredient> addIngredient(@Valid @RequestBody Ingredient ingredient){
+    public ResponseEntity<Ingredient> addIngredient(@Valid @RequestBody Ingredient ingredient) {
         ingredientService.addIngredient(ingredient);
         return ResponseEntity.ok(ingredient);
     }
@@ -93,24 +94,25 @@ public class IngredientController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Ингридиент найден",
-                    content = {@Content (mediaType = "application/json",
+                    content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
-    public ResponseEntity<Ingredient> editIngredient(@PathVariable long id,@Valid @RequestBody Ingredient ingredient) {
+    public ResponseEntity<Ingredient> editIngredient(@PathVariable long id, @Valid @RequestBody Ingredient ingredient) {
         ingredient = ingredientService.editIngredient(id, ingredient);
-        if(ingredient == null){
+        if (ingredient == null) {
             ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ingredient);
     }
+
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаление ингредиента по ID",
             description = "Пользователь должен ввести ID Ингредиента, который необходимо удалить"
     )
     @Parameters(value = {@Parameter(name = "id", example = "1")})
-    public ResponseEntity<Void> deleteIngredient(@PathVariable long id){
-        if(ingredientService.deleteIngredient(id)){
+    public ResponseEntity<Void> deleteIngredient(@PathVariable long id) {
+        if (ingredientService.deleteIngredient(id)) {
             ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -121,21 +123,21 @@ public class IngredientController {
             summary = "Удаление всего списка Ингредиентов",
             description = "После данной операции, все Ингредиенты будут удалены"
     )
-    public ResponseEntity<Void> deleteAll(){
+    public ResponseEntity<Void> deleteAll() {
         ingredientService.deleteAll();
         return ResponseEntity.ok().build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String,String> handleValidationException(MethodArgumentNotValidException ex){
-                Map<String,String> errors = new HashMap<>();
-                ex.getBindingResult().getAllErrors().forEach((error) -> {
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-    return errors;
+        return errors;
     }
 
     //    public ResponseEntity<String> getIngredients(){
