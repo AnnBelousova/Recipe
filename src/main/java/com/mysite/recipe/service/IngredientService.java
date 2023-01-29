@@ -3,6 +3,8 @@ package com.mysite.recipe.service;
 import com.mysite.recipe.model.Ingredient;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -18,4 +20,6 @@ public interface IngredientService {
     boolean deleteIngredient(long id);
 
     void deleteAll();
+
+    Path createListOfIngredients() throws IOException;
 }

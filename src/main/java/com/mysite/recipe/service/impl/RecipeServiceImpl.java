@@ -3,19 +3,21 @@ package com.mysite.recipe.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysite.recipe.model.Ingredient;
 import com.mysite.recipe.model.Recipe;
 import com.mysite.recipe.service.FileService;
 import com.mysite.recipe.service.RecipeService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -99,6 +101,18 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
+    @Override
+    public Path createListOfRecipes() throws IOException {
+        HashMap<Long,Recipe> recipeHashMap = new HashMap<>();
+        Path path = fileService.createTempFileRec("recipes");
+        {
+            for (Recipe recipe: recipeHashMap.values()) {
+                    Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND);
+                    writer.append(recipe.toString());
+                    writer.append("\n");
+            }
+        }return path;
+    }
 
     //    @Override
 //    public String getRecipes() {

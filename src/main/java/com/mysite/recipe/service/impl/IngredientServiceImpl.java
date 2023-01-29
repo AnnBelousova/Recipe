@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysite.recipe.model.Ingredient;
-import com.mysite.recipe.model.Recipe;
 import com.mysite.recipe.service.FileService;
 import com.mysite.recipe.service.IngredientService;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -93,6 +96,19 @@ public class IngredientServiceImpl implements IngredientService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Path createListOfIngredients() throws IOException {
+        HashMap<Long, Ingredient> ingredientHashMap = new HashMap<>();
+        Path path = fileService.createTempFileIngr("ingredients");
+        {
+            for (Ingredient ingredient: ingredientHashMap.values()) {
+                Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND);
+                writer.append(ingredient.toString());
+                writer.append("\n");
+            }
+        }return path;
     }
 //    @Override
 //    public String getIngredients() {
