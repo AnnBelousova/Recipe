@@ -32,7 +32,23 @@ public class FileServiceImpl implements FileService {
         }
 
     }
+    @Override
+    public Path createTempFileIngr(String suffix){
+        try {
+           return Files.createTempFile(Path.of(dataFilePath),"tempFileIngr",suffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Override
+    public Path createTempFileRec(String suffix){
+        try {
+            return Files.createTempFile(Path.of(dataFilePath),"tempFileRec",suffix);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Override
     public String readIngredientsFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameIngr);
@@ -43,8 +59,8 @@ public class FileServiceImpl implements FileService {
             throw new RuntimeException();
         }
     }
-
-    private boolean deleteIngredientsDataFromFile() {
+    @Override
+    public boolean deleteIngredientsDataFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameIngr);
         try {
             Files.deleteIfExists(path);
@@ -81,7 +97,8 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    private boolean deleteRecipesDataFromFile() {
+    @Override
+    public boolean deleteRecipesDataFromFile() {
         Path path = Path.of(dataFilePath, dataFileNameRec);
         try {
             Files.deleteIfExists(path);
@@ -124,5 +141,13 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public File getDataFileRec(){
+        return new File(dataFilePath + "/" + dataFileNameRec);
+    }
+    @Override
+    public File getDataFileIngr(){
+        return new File(dataFilePath + "/" + dataFileNameIngr);
     }
 }
