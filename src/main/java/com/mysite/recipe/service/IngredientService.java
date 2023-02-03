@@ -1,11 +1,15 @@
 package com.mysite.recipe.service;
 
 import com.mysite.recipe.model.Ingredient;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public interface IngredientService {
     Ingredient getIngredient(long id);
 
-    String getIngredients();
+    Collection<Ingredient> getIngredients();
 
     long addIngredient(Ingredient ingredient);
 
