@@ -1,11 +1,17 @@
 package com.mysite.recipe.service;
 
 import com.mysite.recipe.model.Ingredient;
-import com.mysite.recipe.model.Recipe;
-
-import java.util.Map;
 
 public interface IngredientService {
-    Ingredient getIngredient(int id);
-    void addIngredient(Ingredient ingredient);
+    Ingredient getIngredient(long id);
+
+    String getIngredients();
+
+    long addIngredient(Ingredient ingredient);
+
+    Ingredient editIngredient(long id, Ingredient newIngredient);
+
+    boolean deleteIngredient(long id);
+
+    void deleteAll();
 }

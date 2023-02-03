@@ -9,23 +9,56 @@ import java.util.Map;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
-    private int idRecipe = 0;
-    private Map<Integer, Recipe> recipes = new HashMap<>();
-    Recipe recipe;
+    private static long recId = 0;
+    private Map<Long, Recipe> recipes = new HashMap<>();
 
+    Recipe recipe;
     @Override
-    public Recipe getRecipe(int id) {
-        for(Map.Entry<Integer, Recipe> entry: recipes.entrySet()){
-            if(recipes.containsKey(id)){
-                System.out.println(entry.getValue());
-            }else {
-                System.out.printf("Рецепт с номером %d отсутствует", id);
+    public Recipe getRecipeById(long id) {
+        for(Map.Entry<Long, Recipe> recipeEntry:recipes.entrySet()){
+            if(recipeEntry.getKey() == id){
+                recipe = recipeEntry.getValue();
+                return recipe;
             }
-        }return recipe;
+        }return null;
     }
 
     @Override
-    public void addRecipe(Recipe recipe) {
-       recipes.put(idRecipe++,recipe);
+    public String getRecipes() {
+        String value = "";
+        for(Map.Entry<Long, Recipe> pair : recipes.entrySet()){
+            value += pair.getValue().getRecipeName() + ", " +
+                    pair.getValue().getPreparingTime() + ", "
+                    + pair.getValue().getIngredients() + "\n";
+        }
+        return value;
+    }
+
+
+    @Override
+    public long addRecipe(Recipe recipe) {
+        recipes.put(recId, recipe);
+        return recId++;
+    }
+
+    @Override
+    public Recipe editRecipe(long id, Recipe recipe){
+        if(recipes.containsKey(id)){
+            recipes.put(id,recipe);
+            return recipe;
+        }return null;
+    }
+
+    @Override
+    public  boolean deleteRecipe(long id){
+        if(recipes.containsKey(id) && !recipe.equals(null)){
+            recipes.remove(id);
+            return true;
+        }return false;
+    }
+
+    @Override
+    public void deleteAll(){
+        recipes =  new HashMap<>();
     }
 }
