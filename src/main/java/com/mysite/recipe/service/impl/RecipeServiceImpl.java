@@ -110,11 +110,11 @@ public class RecipeServiceImpl implements RecipeService {
     public Path createListOfRecipes() throws IOException {
         HashMap<Long,Recipe> recipeHashMap = recipes;
         Path path = fileService.createTempFileRec("recipes");
-        for (Recipe recipe: recipeHashMap.values()) {
+
             try(Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)){
+                for (Recipe recipe: recipeHashMap.values()) {
                 writer.append(recipe.getName() + "\n"
                         + "Время приготовления: " + recipe.getPreparingTime() + " минут\n" + "Ингредиенты:\n");
-
                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
                     if(recipe.getIngredients().get(i).getMeasureUnit() != null && recipe.getIngredients().get(i).getQuantity() != 0) {
                         writer.append("•" + recipe.getIngredients().get(i).getName() + " - "
