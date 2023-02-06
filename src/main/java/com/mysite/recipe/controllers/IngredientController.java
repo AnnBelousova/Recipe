@@ -13,23 +13,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.StringReader;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @Tag(name = "Ингредиенты", description = "Контроллер для работы со списком 'Ингредиенты'")
 @RestController
@@ -47,7 +41,7 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Ингридиент найден",
+                    description = "Ингредиент найден",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
@@ -67,11 +61,12 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Ингридиент найден",
+                    description = "Ингредиент найден",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
     public Collection<Ingredient> getIngredients() {
+
         return this.ingredientService.getIngredients();
     }
 
@@ -83,7 +78,7 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Ингридиент найден",
+                    description = "Ингредиент найден",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
@@ -100,7 +95,7 @@ public class IngredientController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Ингридиент найден",
+                    description = "Ингредиент найден",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Ingredient.class))}
             )})
@@ -153,20 +148,5 @@ public class IngredientController {
             return ResponseEntity.internalServerError().build();
         }
     }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
 
-    //    public ResponseEntity<String> getIngredients(){
-//        String values = ingredientService.getIngredients();
-//        return ResponseEntity.ok(values);
-//    }
 }

@@ -3,6 +3,7 @@ package com.mysite.recipe.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysite.recipe.exception.ExceptionThrowFilesProcessing;
 import com.mysite.recipe.model.Recipe;
 import com.mysite.recipe.service.FileService;
 import com.mysite.recipe.service.RecipeService;
@@ -18,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -30,11 +32,14 @@ public class RecipeServiceImpl implements RecipeService {
 
     @PostConstruct
     private void init() {
-        if(fileService.isFileExistsRec() == true){
-            System.out.println(fileService.isFileExistsRec());
-            readData();
-        }else{
+        try{
+            if(fileService.isFileExistsRec() == true){
+                readDataRec();
+            }else
             fileService.createFileRec();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -91,38 +96,38 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
-    private void readData() {
+    private void readDataRec() {
         String json = fileService.readRecipesFromFile();
         try {
             recipes = new ObjectMapper().readValue(json, new TypeReference<HashMap<Long, Recipe>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new ExceptionThrowFilesProcessing("Файл не прочитан");
         }
     }
 
     @Override
     public Path createListOfRecipes() throws IOException {
-        HashMap<Long,Recipe> recipeHashMap = new HashMap<>();
+        HashMap<Long,Recipe> recipeHashMap = recipes;
         Path path = fileService.createTempFileRec("recipes");
-        {
-            for (Recipe recipe: recipeHashMap.values()) {
-                    Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND);
-                    writer.append(recipe.toString());
+        for (Recipe recipe: recipeHashMap.values()) {
+            try(Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)){
+                writer.append(recipe.getName() + "\n"
+                        + "Время приготовления:" + recipe.getPreparingTime() + "\n" + "Ингредиенты:\n");
+
+                for (int i = 0; i < recipe.getIngredients().size(); i++) {
+                    writer.append("•" + recipe.getIngredients().get(i).getName()  + " - "
+                            + recipe.getIngredients().get(i).getQuantity() + " "
+                            + recipe.getIngredients().get(i).getMeasureUnit());
+                }
+                writer.append("\n" + "Инструкция:\n");
+                for (int i = 0; i < recipe.getSteps().size(); i++) {
+                    writer.append(recipe.getSteps().get(i) + "\n");
+                }
                     writer.append("\n");
             }
-        }return path;
+            }
+        return path;
     }
 
-    //    @Override
-//    public String getRecipes() {
-//        String value = "";
-//        StringUtils.upperCase(value);
-//        for(Map.Entry<Long, Recipe> pair : recipes.entrySet()){
-//            value += pair.getValue().getRecipeName() + ", " +
-//                    pair.getValue().getPreparingTime() + ", "
-//                    + pair.getValue().getIngredients() + "\n";
-//        }
-//        return value;
-//    }
 }

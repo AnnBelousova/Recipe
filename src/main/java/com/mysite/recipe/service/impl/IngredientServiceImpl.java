@@ -3,6 +3,8 @@ package com.mysite.recipe.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysite.recipe.exception.ExceptionRecipeIngredientExisting;
+import com.mysite.recipe.exception.ExceptionThrowFilesProcessing;
 import com.mysite.recipe.model.Ingredient;
 import com.mysite.recipe.service.FileService;
 import com.mysite.recipe.service.IngredientService;
@@ -28,11 +30,14 @@ public class IngredientServiceImpl implements IngredientService {
 
     @PostConstruct
     private void init() {
-        if (fileService.isFileExistsIngr() == true) {
-            System.out.println(fileService.isFileExistsIngr());
-            readData();
-        } else {
+        try{
+            if(fileService.isFileExistsIngr() == true){
+                readDataIngr();
+            }else
             fileService.createFileIngr();
+        }catch (Exception e)
+        {
+           e.printStackTrace();
         }
     }
 
@@ -50,6 +55,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public long addIngredient(Ingredient ingredient) {
+        if(ingredients.containsValue(ingredient)){
+            throw new ExceptionRecipeIngredientExisting();
+        }
         ingredients.put(ingrId, ingredient);
         saveData();
         return ingrId++;
@@ -58,7 +66,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Ingredient editIngredient(long id, Ingredient ingredient) {
         if (!ingredients.containsKey(id)) {
-            throw new NotFoundException("Ингридиент не найден");
+            throw new NotFoundException("Ингредиент не найден");
         }
         ingredients.put(id, ingredient);
         saveData();
@@ -88,13 +96,13 @@ public class IngredientServiceImpl implements IngredientService {
         }
     }
 
-    private void readData() {
+    private void readDataIngr() {
         String json = fileService.readIngredientsFromFile();
         try {
             ingredients = new ObjectMapper().readValue(json, new TypeReference<HashMap<Long, Ingredient>>() {
             });
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new ExceptionThrowFilesProcessing("Файл не прочитан");
         }
     }
 
@@ -105,20 +113,9 @@ public class IngredientServiceImpl implements IngredientService {
         {
             for (Ingredient ingredient: ingredientHashMap.values()) {
                 Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND);
-                writer.append(ingredient.toString());
+                writer.append(ingredient.getName() + ingredient.getMeasureUnit() + ingredient.getQuantity());
                 writer.append("\n");
             }
         }return path;
     }
-//    @Override
-//    public String getIngredients() {
-//        String value = "";
-//        StringUtils.upperCase(value);
-//        for(Map.Entry<Long, Ingredient> pair : ingredients.entrySet()){
-//            value += pair.getValue().getIngredientName() + ", " +
-//                    pair.getValue().getQuantity() + ", "
-//                    + pair.getValue().getMeasureUnit() + "\n";
-//        }
-//        return value;
-//    }
 }

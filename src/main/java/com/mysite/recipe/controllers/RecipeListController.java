@@ -138,7 +138,7 @@ public class RecipeListController {
         return notFoundException.getMessage();
     }
 
-    @GetMapping("/recipesList")
+    @GetMapping("/export-recipesList")
     public ResponseEntity<Object> getRecipesList(){
         try {
             Path path = recipeService.createListOfRecipes();
@@ -147,19 +147,13 @@ public class RecipeListController {
             }
             InputStreamResource resource = new InputStreamResource(new FileInputStream(path.toFile()));
             return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.TEXT_PLAIN)
                     .contentLength(Files.size(path))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment", "filename=\"recipesList.json\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"RecipesList.txt\"")
                     .body(resource);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
-
-    //    public ResponseEntity<String> getRecipes(){
-    //        String values = recipeService.getRecipes();
-    //        return ResponseEntity.ok(values);
-    //    }
-
 }
