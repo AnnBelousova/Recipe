@@ -113,12 +113,16 @@ public class RecipeServiceImpl implements RecipeService {
         for (Recipe recipe: recipeHashMap.values()) {
             try(Writer writer = Files.newBufferedWriter(path, StandardOpenOption.APPEND)){
                 writer.append(recipe.getName() + "\n"
-                        + "Время приготовления:" + recipe.getPreparingTime() + "\n" + "Ингредиенты:\n");
+                        + "Время приготовления: " + recipe.getPreparingTime() + " минут\n" + "Ингредиенты:\n");
 
                 for (int i = 0; i < recipe.getIngredients().size(); i++) {
-                    writer.append("•" + recipe.getIngredients().get(i).getName()  + " - "
-                            + recipe.getIngredients().get(i).getQuantity() + " "
-                            + recipe.getIngredients().get(i).getMeasureUnit());
+                    if(recipe.getIngredients().get(i).getMeasureUnit() != null && recipe.getIngredients().get(i).getQuantity() != 0) {
+                        writer.append("•" + recipe.getIngredients().get(i).getName() + " - "
+                                + recipe.getIngredients().get(i).getQuantity() + " " + recipe.getIngredients().get(i).getMeasureUnit() + "\n");
+                    }else
+                    {
+                        writer.append("•" + recipe.getIngredients().get(i).getName() + "\n");
+                    }
                 }
                 writer.append("\n" + "Инструкция:\n");
                 for (int i = 0; i < recipe.getSteps().size(); i++) {
