@@ -1,10 +1,16 @@
 package com.mysite.recipe.service.impl;
 
+import com.mysite.recipe.exception.ExceptionThrowFilesProcessing;
 import com.mysite.recipe.service.FileService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,7 +99,7 @@ public class FileServiceImpl implements FileService {
             return Files.readString(path);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException();
+            throw new ExceptionThrowFilesProcessing("Файл не прочитан");
         }
     }
 
@@ -149,5 +155,16 @@ public class FileServiceImpl implements FileService {
     @Override
     public File getDataFileIngr(){
         return new File(dataFilePath + "/" + dataFileNameIngr);
+    }
+    @Override
+    public ResponseEntity<Object> createOutputStream(File dataFile, MultipartFile file){
+        try (
+            FileOutputStream fos = new FileOutputStream(dataFile)){
+            IOUtils.copy(file.getInputStream(),fos);
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ExceptionThrowFilesProcessing("Файл не сохранен");
+        }
     }
 }
